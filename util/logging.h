@@ -31,6 +31,7 @@
 #include <memory>
 #include <cstdlib>
 #include <typeinfo>
+#include <cxxabi.h>
 
 template <class D>
 struct lifecycle_tracker

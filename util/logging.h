@@ -36,6 +36,7 @@
 template <class D>
 struct lifecycle_tracker
 {
+    protected :
     lifecycle_tracker() { 
         std::unique_ptr<char, void(*)(void *)>  realname  { abi::__cxa_demangle(typeid(static_cast<D &>(*this)).name(), 0, 0, 0), std::free }  ;
         std::clog << "ctor :" << realname.get() << "(" << this << ")" << std::endl; 

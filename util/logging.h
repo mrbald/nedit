@@ -31,12 +31,20 @@
 #include <memory>
 #include <cstdlib>
 #include <typeinfo>
+#include <cxxabi.h>
 
-template <class T>
+template <class D>
 struct lifecycle_tracker
 {
-    lifecycle_tracker() { std::clog << "c-ted " << typeid(*this).name() << "(" << this << ")" << std::endl; }
-    virtual ~lifecycle_tracker() { std::clog << "d-ted " << typeid(*this).name() << "(" << this << ")" << std::endl; }
+    protected :
+    lifecycle_tracker() { 
+        std::unique_ptr<char, void(*)(void *)>  realname  { abi::__cxa_demangle(typeid(static_cast<D &>(*this)).name(), 0, 0, 0), std::free }  ;
+        std::clog << "ctor :" << realname.get() << "(" << this << ")" << std::endl; 
+    }
+    
+    virtual ~lifecycle_tracker() { 
+        std::unique_ptr<char, void(*)(void *)>  realname  { abi::__cxa_demangle(typeid(static_cast<D &>(*this)).name(), 0, 0, 0), std::free }  ;
+        std::clog << "dtor :" << realname.get() << "(" << this << ")" << std::endl; }
 };
 
 #endif // NEDIT_UTIL_LOGGING_H
